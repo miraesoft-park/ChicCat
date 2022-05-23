@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT LICENSE
 // File: @openzeppelin/contracts/utils/introspection/IERC165.sol
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 /**
  * @dev Interface of the ERC165 standard, as defined in the
@@ -24,7 +24,7 @@ interface IERC165 {
 }
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721.sol
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 /**
  * @dev Required interface of an ERC721 compliant contract.
  */
@@ -167,7 +167,7 @@ interface IERC721 is IERC165 {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 
 /**
@@ -197,7 +197,7 @@ interface IERC721Enumerable is IERC721 {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 
 /**
@@ -227,7 +227,7 @@ abstract contract ERC165 is IERC165 {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 /**
  * @dev String operations.
@@ -296,7 +296,7 @@ library Strings {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 /**
  * @dev Collection of functions related to the address type
@@ -515,7 +515,7 @@ library Address {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 
 /**
@@ -543,7 +543,7 @@ interface IERC721Metadata is IERC721 {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 /**
  * @title ERC721 token receiver interface
@@ -570,7 +570,7 @@ interface IERC721Receiver {
 
 
 // File: @openzeppelin/contracts/token/ERC721/ERC721.sol
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 /**
@@ -977,7 +977,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 
 
@@ -1138,82 +1138,38 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
 }
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
-contract Collection is ERC721Enumerable, Ownable {
+contract Collection is ERC721, Ownable {
+    using Counters for Counters.Counter;
+    string public fileExtention = ".json";
     using Strings for uint256;
-    string public baseURI;
-    string public baseExtension = ".json";
-        uint256 public cost = 100 klay;
-    bool public paused = false;
 
-    constructor() ERC721("ChicCat", "CHC") {}
-        // internal
-        function _baseURI() internal view virtual override returns (string memory) {
+    Counters.Counter private _tokenIdCounter;
+
+    constructor() ERC721("ChicCat", "CAT") {}
+
+    function _baseURI() internal pure override returns (string memory) {
         return "ipfs://QmNYtTUWY6xrfdUu1zVV1sw2Bk8f9NbE3SyT7JzwhLAeMu/";
     }
-        // public
 
-        function mint(address _to, uint256 _mintAmount) public payable {
-            uint256 supply = totalSupply();
-            require(!paused);
-            require(_mintAmount > 0);
-            
-            if (msg.sender != owner()) {
-            require(msg.value == cost * _mintAmount, "Need to send 100.1 klay!");
-            }
-            
-            for (uint256 i = 1; i <= _mintAmount; i++) {
-                _safeMint(_to, supply + i);
-            }
-        }
+    function safeMint(address to) public onlyOwner {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(to, tokenId);
+    }
 
-        function walletOfOwner(address _owner)
-        public
-        view
-        returns (uint256[] memory)
-        {
-            uint256 ownerTokenCount = balanceOf(_owner);
-            uint256[] memory tokenIds = new uint256[](ownerTokenCount);
-            for (uint256 i; i < ownerTokenCount; i++) {
-                tokenIds[i] = tokenOfOwnerByIndex(_owner, i);
-            }
-            return tokenIds;
+      function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString(), fileExtention)) : "";
+    }
+
+    function batchMint(address to, uint amount) public onlyOwner{
+        for (uint i = 0; i < amount; i++) {
+            safeMint(to);
         }
-    
-        
-        function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-            require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token"); 
-            string memory currentBaseURI = _baseURI();
-            return bytes(currentBaseURI).length > 0 ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) : "";
-        }
-        
-        function setBaseURI(string memory _newBaseURI) public onlyOwner() {
-            baseURI = _newBaseURI;
-        }
-        
-        function setBaseExtension(string memory _newBaseExtension) public onlyOwner() {
-            baseExtension = _newBaseExtension;
-        }
-        
-        function pause(bool _state) public onlyOwner() {
-            paused = _state;
-        }
-        
-        function withdraw() public payable onlyOwner() {
-            require(payable(msg.sender).send(address(this).balance));
-        }
-        
-        function safeMint(address to) public onlyOwner {
-            uint256 tokenId = _tokenIdCounter.current();
-            _tokenIdCounter.increment();
-            _safeMint(to, tokenId);
-        }
-        
-        function batchMint(address to, uint amount) public onlyOwner{
-            for (uint i = 0; i < amount; i++) {
-                safeMint(to);
-            }
-        }
+    }
 }
