@@ -1146,7 +1146,6 @@ contract Collection is ERC721Enumerable, Ownable {
     string public baseURI;
     string public baseExtension = ".json";
         uint256 public cost = 100 klay;
-    uint256 public maxSupply = 100000;
     bool public paused = false;
 
     constructor() ERC721("ChicCat", "CHC") {}
@@ -1160,7 +1159,6 @@ contract Collection is ERC721Enumerable, Ownable {
             uint256 supply = totalSupply();
             require(!paused);
             require(_mintAmount > 0);
-            require(supply + _mintAmount <= maxSupply);
             
             if (msg.sender != owner()) {
             require(msg.value == cost * _mintAmount, "Need to send 100.1 klay!");
@@ -1185,24 +1183,11 @@ contract Collection is ERC721Enumerable, Ownable {
         }
     
         
-        function tokenURI(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (string memory) {
-            require(
-                _exists(tokenId),
-                "ERC721Metadata: URI query for nonexistent token"
-                );
-                
-                string memory currentBaseURI = _baseURI();
-                return
-                bytes(currentBaseURI).length > 0 
-                ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension))
-                : "";
+        function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+            require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token"); 
+            string memory currentBaseURI = _baseURI();
+            return bytes(currentBaseURI).length > 0 ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) : "";
         }
-        // only owner
         
         function setBaseURI(string memory _newBaseURI) public onlyOwner() {
             baseURI = _newBaseURI;
