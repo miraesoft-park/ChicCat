@@ -68,13 +68,13 @@ contract KIP13 is IKIP13 {
         _supportedInterfaces[interfaceId] = true;
     }
 }
-// library Address {
-    // function isContract(address account) internal view returns (bool) {
-        // uint256 size;
-        // assembly { size := extcodesize(account) }
-        // return size > 0;
-    // }
-// }
+library Address {
+    function isContract(address account) internal view returns (bool) {
+        uint256 size;
+        assembly { size := extcodesize(account) }
+        return size > 0;
+    }
+}
 contract IKIP7Receiver {
     function onKIP7Received(address _operator, address _from, uint256 _amount, bytes memory _data) public returns (bytes4);
 }
