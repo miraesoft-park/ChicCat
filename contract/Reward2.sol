@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "https://github.com/miraesoft-park/ChicCat/blob/1121ad4f733b219b6f7a431bc60f2ad2018d4d55/contract/Collection.sol";
 
 contract Reward2 is ERC20, ERC20Burnable, Ownable {
-  using Collection.SafeMath for uint256;
+  using SafeMath for uint256;
 
   mapping(address => uint256) private _balances;
   mapping(address => bool) controllers;
