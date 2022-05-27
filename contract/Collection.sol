@@ -1012,8 +1012,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     function _isApprovedOrOwner(address spender, uint256 tokenId) internal view virtual returns (bool) {
         require(_exists(tokenId), "ERC721: operator query for nonexistent token");
         address owner = ERC721.ownerOf(tokenId);
-        console.log(getApproved(tokenId));
-        console.log(isApprovedForAll(owner, spender));
         return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
     }
 
@@ -1354,6 +1352,7 @@ contract Collection is ERC721Enumerable, Ownable {
     uint256 public maxSupply = 20;
     uint256 public maxMintAmount = 5;
     bool public paused = false;
+    address payable ownerAddress = payable(owner());
 
     mapping (address => uint256) private _balances;
 
@@ -1371,10 +1370,11 @@ contract Collection is ERC721Enumerable, Ownable {
 
         if (msg.sender != owner()) {
             require(msg.value == cost * _mintAmount, "Need to send 0.1 klay!");
-            transfer(_to, owner(), cost * _mintAmount);
         }
 
         for (uint256 i = 1; i <= _mintAmount; i++) {
+            // uint256 sendAmount = i * cost * 10 ** 18;
+            // ownerAddress.transfer(sendAmount);
             _safeMint(_to, supply + i);
         }
     }
@@ -1419,13 +1419,5 @@ contract Collection is ERC721Enumerable, Ownable {
 
     function balanceOf(address account) public view override returns (uint256) {
         return _balances[account];
-    }
-
-    function transfer(address to, address from, uint256 amount) public payable {
-        require(to != address(0), "transfer to the zero address");
-        require(from != address(0), "transfer from the zero address");
-
-        _balances[from] = SafeMath.sub(_balances[from], amount);
-        _balances[to] = SafeMath.add(_balances[to], amount);
     }
 }
