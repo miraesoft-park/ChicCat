@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT LICENSE
 
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract Reward2 is ERC20 {
-// contract Reward2 is ERC20, ERC20Burnable, Ownable {
+contract Rewards is ERC20, ERC20Burnable, Ownable {
   using SafeMath for uint256;
 
   mapping(address => uint256) private _balances;
