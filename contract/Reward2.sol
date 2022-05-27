@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Reward2 is ERC20, ERC20Burnable, Ownable {
-  using SafeMath for uint256;
+  //using SafeMath for uint256;
 
   mapping(address => uint256) private _balances;
   mapping(address => bool) controllers;
