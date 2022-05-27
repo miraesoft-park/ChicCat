@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT LICENSE
 
-pragma solidity 0.8.4;
+pragma solidity ^0.8.0;
 
-import "https://github.com/miraesoft-park/ChicCat/blob/4db3798db5120b25c4d4886921583f2749720e18/contract/Reward.sol";
-import "https://github.com/miraesoft-park/ChicCat/blob/1121ad4f733b219b6f7a431bc60f2ad2018d4d55/contract/Collection.sol";
+import "https://github.com/miraesoft-park/ChicCat/contract/Reward2.sol";
+import "https://github.com/miraesoft-park/ChicCat/contract/Collection.sol";
+
+import "hardhat/console.sol";
 
 contract NFTStaking is Ownable, IERC721Receiver {
 
@@ -22,12 +24,12 @@ contract NFTStaking is Ownable, IERC721Receiver {
 
   // reference to the Block NFT contract
   Collection nft;
-  Reward token;
+  Reward2 token;
 
   // maps tokenId to stake
   mapping(uint256 => Stake) public vault; 
 
-   constructor(Collection _nft, Reward _token) { 
+   constructor(Collection _nft, Reward2 _token) { 
     nft = _nft;
     token = _token;
   }
@@ -77,12 +79,6 @@ contract NFTStaking is Ownable, IERC721Receiver {
       _claim(msg.sender, tokenIds, true);
   }
 
-// @Net2Dev - Follow me on Youtube , Tiktok, Instagram
-// TOKEN REWARDS CALCULATION
-// MAKE SURE YOU CHANGE THE VALUE ON BOTH CLAIM AND EARNINGINFO FUNCTIONS.
-// Find the following line and update accordingly based on how much you want 
-// to reward users with ERC-20 reward tokens.
-// I hope you get the idea based on the example.
 // rewardmath = 100 ether .... (This gives 1 token per day per NFT staked to the staker)
 // rewardmath = 200 ether .... (This gives 2 tokens per day per NFT staked to the staker)
 // rewardmath = 500 ether .... (This gives 5 tokens per day per NFT staked to the staker)
@@ -98,7 +94,7 @@ contract NFTStaking is Ownable, IERC721Receiver {
       Stake memory staked = vault[tokenId];
       require(staked.owner == account, "not an owner");
       uint256 stakedAt = staked.timestamp;
-      rewardmath = 100 ether * (block.timestamp - stakedAt) / 86400 ;
+      rewardmath = 100 * (block.timestamp - stakedAt) / 86400 ;
       earned = rewardmath / 100;
       vault[tokenId] = Stake({
         owner: account,
