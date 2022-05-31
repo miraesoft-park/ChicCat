@@ -1155,13 +1155,7 @@ contract Collection is ERC721Enumerable, Ownable {
         require(_mintAmount <= maxMintAmount);
         require(supply + _mintAmount <= maxSupply);
 
-        if (msg.sender != owner()) {
-            require(msg.value == cost * _mintAmount, "Need to send 0.1 klay!");
-        }
-
-        for (uint256 i = 1; i <= _mintAmount; i++) {
-            // uint256 sendAmount = i * cost * 10 ** 18;
-            // ownerAddress.transfer(sendAmount);
+        for (uint256 i = 0; i < _mintAmount; i++) {
             _safeMint(_to, supply + i);
         }
     }
@@ -1202,9 +1196,5 @@ contract Collection is ERC721Enumerable, Ownable {
 
     function withdraw() public payable onlyOwner() {
         require(payable(msg.sender).send(address(this).balance));
-    }
-
-    function balanceOf(address account) public view override returns (uint256) {
-        return _balances[account];
     }
 }
