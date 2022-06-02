@@ -79,11 +79,6 @@ contract NFTStaking is Ownable, IERC721Receiver {
       _claim(msg.sender, tokenIds, true);
   }
 
-// rewardmath = 100 ether .... (This gives 1 token per day per NFT staked to the staker)
-// rewardmath = 200 ether .... (This gives 2 tokens per day per NFT staked to the staker)
-// rewardmath = 500 ether .... (This gives 5 tokens per day per NFT staked to the staker)
-// rewardmath = 1000 ether .... (This gives 10 tokens per day per NFT staked to the staker)
-
   function _claim(address account, uint256[] calldata tokenIds, bool _unstake) internal {
     uint256 tokenId;
     uint256 earned = 0;
@@ -94,8 +89,8 @@ contract NFTStaking is Ownable, IERC721Receiver {
       Stake memory staked = vault[tokenId];
       require(staked.owner == account, "not an owner");
       uint256 stakedAt = staked.timestamp;
-      rewardmath = 100 * (block.timestamp - stakedAt) / 86400 ;
-      earned = rewardmath / 100;
+      rewardmath = 913242 * (block.timestamp - stakedAt) / 86400 ;
+      earned = rewardmath / 1000000000;
       vault[tokenId] = Stake({
         owner: account,
         tokenId: uint24(tokenId),
