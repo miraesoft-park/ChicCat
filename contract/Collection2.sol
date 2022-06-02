@@ -1131,7 +1131,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 pragma solidity ^0.8.0;
 
-contract Collection is ERC721Enumerable {
+contract Collection2 is ERC721Enumerable {
     using Strings for uint256;
     string public baseURI;
     string public baseExtension = ".json";
