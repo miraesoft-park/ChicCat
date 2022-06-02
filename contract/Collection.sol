@@ -1157,7 +1157,7 @@ contract Collection is ERC721Enumerable, Ownable {
 
     function mint(address _to, uint256 _mintAmount) public payable {
         uint256 supply = totalSupply();
-        uint256 sendAmount = cost * _mintAmount * 10 ** 18;
+        // uint256 sendAmount = cost * _mintAmount * 10 ** 18;
 
         require(!paused);
         require(_mintAmount > 0);
