@@ -580,7 +580,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * the Metadata extension, but not including the Enumerable extension, which is available separately as
  * {ERC721Enumerable}.
  */
-contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
+contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
     using Address for address;
     using Strings for uint256;
 
@@ -1131,7 +1131,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 pragma solidity ^0.8.0;
 
-contract Collection2 is ERC721Enumerable, Ownable {
+contract Collection is ERC721Enumerable {
     using Strings for uint256;
     string public baseURI;
     string public baseExtension = ".json";
