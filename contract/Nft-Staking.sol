@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "https://github.com/miraesoft-park/ChicCat/contract/Reward2.sol";
-import "https://github.com/miraesoft-park/ChicCat/contract/Collection.sol";
+import "https://github.com/miraesoft-park/ChicCat/contract/Collection2.sol";
 
 import "hardhat/console.sol";
 
@@ -23,13 +23,13 @@ contract NFTStaking is Ownable, IERC721Receiver {
   event Claimed(address owner, uint256 amount);
 
   // reference to the Block NFT contract
-  Collection nft;
+  Collection2 nft;
   Reward2 token;
 
   // maps tokenId to stake
   mapping(uint256 => Stake) public vault; 
 
-   constructor(Collection _nft, Reward2 _token) { 
+   constructor(Collection2 _nft, Reward2 _token) { 
     nft = _nft;
     token = _token;
   }
