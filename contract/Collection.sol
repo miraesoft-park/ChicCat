@@ -1140,20 +1140,32 @@ contract Collection is ERC721Enumerable, Ownable {
     uint256 public maxMintAmount = 5;
     bool public paused = false;
     address payable ownerAddress = payable(owner());
+    address public owner2;
 
     mapping (address => uint256) private _balances;
 
-    constructor() ERC721("ChicCat", "CHC") {}
+    constructor() ERC721("ChicCat", "CHC") {owner2 = msg.sender;}
+    // constructor() public {owner2 = msg.sender;}
+
+    function getBalance() public view returns (uint) {
+        return owner2.balance;
+    }
+
     function _baseURI() internal view virtual override returns (string memory) {
         return "ipfs://QmNYtTUWY6xrfdUu1zVV1sw2Bk8f9NbE3SyT7JzwhLAeMu/";
     }
 
     function mint(address _to, uint256 _mintAmount) public payable {
         uint256 supply = totalSupply();
+        uint256 sendAmount = cost * _mintAmount * 10 ** 18;
+
         require(!paused);
         require(_mintAmount > 0);
         require(_mintAmount <= maxMintAmount);
         require(supply + _mintAmount <= maxSupply);
+        // require(sendAmount < getBalance(), "Need min 100 Klay!");
+       
+        // payable(owner2).transfer(sendAmount);
 
         for (uint256 i = 0; i < _mintAmount; i++) {
             _safeMint(_to, supply + i);
