@@ -19,7 +19,6 @@ contract Reward2 is ERC20, ERC20Burnable, Ownable {
 
   constructor() ERC20("CAT", "CAT") { 
       _mint(msg.sender, 200000000 * 10 ** 18);
-
   }
 
   function mint(address to, uint256 amount) external {
